@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07101f">
+<title>Geometrical Optics — The Complete Physics Guide</title>
+<style>
+:root{--bg:#07101f;--panel:rgba(15,29,51,.78);--panel2:rgba(20,40,68,.72);--line:rgba(145,190,255,.17);--text:#edf5ff;--muted:#a8bad2;--cyan:#65e5ff;--blue:#7d9cff;--gold:#ffd58a;--green:#8ff0c1;--pink:#ff9cc7}
+*{box-sizing:border-box;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.7;overflow-x:hidden}
+a{color:var(--cyan);text-decoration:none}a:hover{text-decoration:underline}
+#scene{position:fixed;inset:-12%;z-index:-2;pointer-events:none;perspective:900px;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#17375b 0%,#0b1b31 38%,#07101f 75%)}
+#scene:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(100,170,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(100,170,255,.045) 1px,transparent 1px);background-size:55px 55px;mask-image:linear-gradient(transparent,#000 25%,#000 75%,transparent);transform:rotateX(58deg) scale(1.5);transform-origin:center 65%}
+#orbital{position:absolute;width:min(78vw,760px);height:min(78vw,760px);left:50%;top:43%;transform:translate(-50%,-50%) scale(1) rotateX(63deg) rotateZ(0deg);transform-style:preserve-3d;will-change:transform}
+.ring{position:absolute;inset:8%;border:1px solid rgba(101,229,255,.23);border-radius:50%;box-shadow:0 0 30px rgba(76,184,255,.1),inset 0 0 30px rgba(76,184,255,.06)}
+.ring:nth-child(2){inset:20%;border-color:rgba(255,213,138,.26);transform:rotateY(70deg)}
+.ring:nth-child(3){inset:32%;border-color:rgba(125,156,255,.34);transform:rotateX(72deg)}
+.lens3d{position:absolute;left:50%;top:50%;width:210px;height:320px;transform:translate(-50%,-50%) rotateY(-24deg) rotateZ(-8deg);border-radius:50% 50% 48% 48%/18% 18% 18% 18%;background:linear-gradient(90deg,rgba(76,163,255,.08),rgba(135,225,255,.43) 28%,rgba(255,255,255,.14) 48%,rgba(69,145,255,.34) 70%,rgba(15,54,105,.16));border:1px solid rgba(177,231,255,.55);box-shadow:inset 16px 0 35px rgba(200,245,255,.15),inset -18px 0 38px rgba(38,110,210,.25),0 0 65px rgba(80,181,255,.25);backdrop-filter:blur(2px)}
+.lens3d:before,.lens3d:after{content:"";position:absolute;top:0;bottom:0;width:1px;background:rgba(235,250,255,.5);left:50%;box-shadow:0 0 18px #8ceaff}
+.lens3d:after{left:25%;opacity:.35}
+.beam{position:absolute;left:-30%;right:-30%;top:50%;height:2px;background:linear-gradient(90deg,transparent,#ffd58a,#fff,#65e5ff,transparent);box-shadow:0 0 16px #65e5ff;transform:rotate(-12deg)}
+.starfield{position:absolute;inset:0;background-image:radial-gradient(2px 2px at 18% 23%,#fff,transparent),radial-gradient(1px 1px at 70% 18%,#9cecff,transparent),radial-gradient(2px 2px at 83% 72%,#fff,transparent),radial-gradient(1px 1px at 30% 81%,#9cecff,transparent),radial-gradient(1px 1px at 54% 56%,#fff,transparent),radial-gradient(2px 2px at 92% 38%,#9cecff,transparent);opacity:.7}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--cyan),var(--gold));z-index:20;box-shadow:0 0 12px var(--cyan)}
+header{position:relative;min-height:92vh;display:flex;align-items:center;padding:100px max(7vw,22px) 70px;overflow:hidden}
+.hero{max-width:850px}
+.eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:.22em;font-size:.76rem;font-weight:800}
+h1{font-size:clamp(3rem,8vw,6.8rem);line-height:.98;letter-spacing:-.065em;margin:18px 0 24px;background:linear-gradient(115deg,#fff 15%,#9deaff 52%,#9baeff 90%);color:transparent;background-clip:text}
+.lead{font-size:clamp(1.05rem,2vw,1.35rem);color:#c2d3e9;max-width:690px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:12px 18px;border-radius:13px;border:1px solid var(--line);background:rgba(101,229,255,.1);color:white;font-weight:700}
+.btn.primary{background:linear-gradient(120deg,#2e9ac2,#586fe0);border:0;box-shadow:0 10px 35px rgba(63,146,218,.25)}
+.hero-note{margin-top:34px;color:#90a9c7;font-size:.88rem}
+nav{position:sticky;top:0;z-index:10;display:flex;gap:8px;overflow-x:auto;padding:10px max(4vw,14px);background:rgba(5,13,26,.78);backdrop-filter:blur(18px);border-block:1px solid var(--line)}
+nav a{white-space:nowrap;padding:8px 12px;border-radius:9px;color:#c5d8f1;font-size:.86rem}
+nav a:hover{background:rgba(101,229,255,.12);text-decoration:none}
+main{width:min(1120px,90vw);margin:auto}
+section{padding:76px 0;scroll-margin-top:75px}
+.section-head{margin-bottom:28px}
+.kicker{color:var(--cyan);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;font-weight:800}
+h2{font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.04em;line-height:1.1;margin:9px 0 12px}
+h3{font-size:1.25rem;margin:0 0 10px;color:#f4f8ff}
+p{color:#c1cee0;margin:.55em 0 1em}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{grid-column:span 6;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 55px rgba(0,0,0,.18);backdrop-filter:blur(12px)}
+.card.third{grid-column:span 4}.card.full{grid-column:1/-1}
+.card p:last-child{margin-bottom:0}
+.tag{display:inline-block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(101,229,255,.25);padding:3px 8px;border-radius:99px;margin-bottom:10px}
+.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#fff;background:rgba(2,10,23,.65);border:1px solid rgba(101,229,255,.2);padding:13px 15px;border-radius:12px;display:block;overflow-x:auto;margin:12px 0;line-height:1.6}
+.note{border-left:3px solid var(--gold);padding:12px 16px;background:rgba(255,213,138,.07);border-radius:0 12px 12px 0;color:#e6d9c0;margin:18px 0}
+.tip{border-left:3px solid var(--green);padding:12px 16px;background:rgba(143,240,193,.07);border-radius:0 12px 12px 0;color:#ccebdc;margin:18px 0}
+.diagram{background:linear-gradient(145deg,rgba(8,22,41,.9),rgba(18,42,68,.65));border:1px solid var(--line);border-radius:18px;padding:12px;overflow:hidden}
+.diagram svg{width:100%;height:auto;display:block;max-height:290px}
+.diagram text{font-family:Arial,sans-serif;fill:#dceeff;font-size:13px}
+.diagram .ray{stroke:#ffd58a;stroke-width:2.4;fill:none}.diagram .axis{stroke:#8da9c8;stroke-dasharray:5 5;stroke-width:1.2}.diagram .obj{stroke:#65e5ff;stroke-width:3;fill:none}.diagram .glass{fill:rgba(101,229,255,.16);stroke:#83eaff;stroke-width:2}
+table{width:100%;border-collapse:collapse;margin:14px 0;color:#cbd8e8;font-size:.92rem}
+th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:#fff;background:rgba(101,229,255,.08)}
+ul,ol{color:#c1cee0;padding-left:1.25rem}li{margin:.4em 0}
+details{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 18px;margin:10px 0}
+summary{cursor:pointer;color:#eaf5ff;font-weight:700}
+small,.muted{color:var(--muted)}
+.calc{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+label{display:block;color:#b8cce5;font-size:.85rem;margin-bottom:5px}
+input,select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#07172a;color:white;font:inherit}
+button{cursor:pointer}
+.result{margin-top:14px;padding:15px;border-radius:12px;background:rgba(101,229,255,.1);border:1px solid rgba(101,229,255,.25);color:#eafaff}
+footer{border-top:1px solid var(--line);padding:38px 5vw 55px;text-align:center;color:#8fa6c3}
+@media(max-width:760px){.card,.card.third{grid-column:1/-1}.calc{grid-template-columns:1fr}header{min-height:85vh;padding-top:90px}.lens3d{width:140px;height:220px}section{padding:58px 0}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="scene" aria-hidden="true"><div class="starfield"></div><div id="orbital"><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="lens3d"><div class="beam"></div></div></div></div>
+<header id="top">
+ <div class="hero">
+  <div class="eyebrow">Physics • Light • Visual learning</div>
+  <h1>Geometrical<br>Optics</h1>
+  <p class="lead">A complete, structured guide to the science of light rays: reflection, refraction, mirrors, lenses, prisms, optical instruments, ray diagrams and the equations that connect them.</p>
+  <div class="actions"><a class="btn primary" href="#foundations">Start learning <span>↘</span></a><a class="btn" href="#formula-sheet">Formula sheet</a></div>
+  <div class="hero-note">Scroll to explore. The 3D optical scene zooms and revolves with your movement.</div>
+ </div>
+</header>
+<nav aria-label="Contents">
+<a href="#foundations">Foundations</a><a href="#reflection">Reflection</a><a href="#refraction">Refraction</a><a href="#tir">Total internal reflection</a><a href="#mirrors">Mirrors</a><a href="#lenses">Lenses</a><a href="#prism">Prisms</a><a href="#instruments">Instruments</a><a href="#formula-sheet">Formula sheet</a><a href="#practice">Examples</a><a href="#glossary">Glossary</a>
+</nav>
+<main>
+<section id="foundations">
+ <div class="section-head"><div class="kicker">01 / Foundations</div><h2>What is geometrical optics?</h2><p>Geometrical optics (ray optics) models light as straight-line rays. It is especially useful when objects and apertures are much larger than the wavelength of light and diffraction can be neglected.</p></div>
+ <div class="grid">
+  <article class="card"><span class="tag">Definition</span><h3>Light ray</h3><p>An ideal line showing the direction in which light energy travels. A bundle of rays forms a beam. Rays are a model, not thin physical wires.</p></article>
+  <article class="card"><span class="tag">Principle</span><h3>Rectilinear propagation</h3><p>In a homogeneous, transparent medium, light travels along straight paths. This explains sharp shadows and the operation of a pinhole camera.</p></article>
+  <article class="card"><span class="tag">Principle</span><h3>Independence of rays</h3><p>When light beams cross, they continue along their own paths; under ordinary linear conditions, the beams do not disturb one another.</p></article>
+  <article class="card"><span class="tag">Principle</span><h3>Reversibility</h3><p>If a light ray travels from A to B along a particular optical path, it can travel from B to A along the same path in reverse.</p></article>
+  <article class="card full"><h3>Wavefronts and rays</h3><p>A wavefront is a surface joining points of a wave that are in the same phase. A ray is perpendicular to the wavefront in an isotropic medium. Plane wavefronts correspond to parallel rays; spherical wavefronts correspond to rays spreading from or converging toward a point.</p>
+   <div class="diagram"><svg viewBox="0 0 700 190" role="img" aria-label="Parallel rays perpendicular to plane wavefronts"><g stroke="#65e5ff" stroke-width="2" fill="none"><path d="M150 25V165M290 25V165M430 25V165"/></g><g class="ray"><path d="M30 95H630"/><path d="M610 86l20 9-20 9"/></g><text x="150" y="18">Wavefront</text><text x="300" y="185">Parallel rays are normal to wavefronts</text></svg></div>
+  </article>
+ </div>
+ <div class="note"><b>When ray optics is not enough:</b> interference, diffraction and polarization require the wave model of light. Geometrical optics does not explain every optical phenomenon.</div>
+</section>
+
+<section id="reflection">
+ <div class="section-head"><div class="kicker">02 / Reflection</div><h2>Reflection of light</h2><p>Reflection occurs when light reaches a boundary and returns to the original medium.</p></div>
+ <div class="grid">
+  <article class="card"><h3>Laws of reflection</h3><ol><li>The incident ray, reflected ray and normal at the point of incidence lie in the same plane.</li><li>The angle of incidence equals the angle of reflection.</li></ol><span class="formula">∠i = ∠r</span><p>Angles are measured from the normal, not from the surface.</p></article>
+  <article class="card"><h3>Types of reflection</h3><p><b>Regular reflection:</b> parallel incident rays reflect in one direction from a smooth surface, producing a clear image.</p><p><b>Diffuse reflection:</b> microscopic surface irregularities send rays in many directions. Each small region still obeys the law of reflection.</p></article>
+  <article class="card full"><h3>Ray diagram: plane mirror</h3><div class="diagram"><svg viewBox="0 0 700 270" role="img" aria-label="Reflection from a plane mirror"><path d="M350 25V245" stroke="#9eb5d2" stroke-width="7"/><path d="M340 30l10 -10 10 10M340 55l10 -10 10 10M340 80l10 -10 10 10M340 105l10 -10 10 10M340 130l10 -10 10 10M340 155l10 -10 10 10M340 180l10 -10 10 10M340 205l10 -10 10 10" stroke="#5f7694" fill="none"/><path class="axis" d="M80 140H620"/><path class="ray" d="M130 35L350 140L570 35"/><path class="ray" d="M130 35l-4 18 18-5M570 35l-18 5 5 18"/><path class="obj" d="M110 140V72m-8 12 8-12 8 12"/><path stroke="#ff9cc7" stroke-dasharray="5 5" fill="none" stroke-width="2" d="M350 140L570 245"/><text x="360" y="22">Plane mirror</text><text x="80" y="165">Incident ray</text><text x="490" y="165">Reflected ray</text><text x="365" y="130">Normal</text><text x="575" y="240">Virtual extension</text></svg></div><p class="muted">Schematic only; the normal is perpendicular to the mirror at the point of incidence.</p></article>
+  <article class="card"><h3>Plane mirror image</h3><ul><li>Virtual and erect</li><li>Same size as the object</li><li>Laterally inverted</li><li>Image distance = object distance</li><li>Cannot be caught on a screen</li></ul><span class="formula">m = hᵢ / hₒ = +1</span></article>
+  <article class="card"><h3>Multiple reflections</h3><p>Two or more mirrors can form multiple images. For two plane mirrors inclined at angle θ, the number depends on symmetry and object position.</p><span class="formula">N = 360°/θ − 1</span><p class="muted">This common expression applies when 360°/θ is an integer and the object is on the angle bisector. Otherwise use the appropriate image-count rule for the arrangement.</p></article>
+ </div>
+</section>
+
+<section id="refraction">
+ <div class="section-head"><div class="kicker">03 / Refraction</div><h2>Refraction of light</h2><p>Refraction is the change in direction of light as it crosses between media because its speed changes. Frequency remains unchanged at the boundary.</p></div>
+ <div class="grid">
+  <article class="card"><h3>Refractive index</h3><p>The absolute refractive index of a medium is the ratio of the speed of light in vacuum to its speed in that medium.</p><span class="formula">n = c/v</span><p>Here c ≈ 3.00 × 10⁸ m s⁻¹ and v is the speed in the medium. A larger n means a lower light speed.</p></article>
+  <article class="card"><h3>Snell's law</h3><p>For light passing from medium 1 to medium 2:</p><span class="formula">n₁ sin i = n₂ sin r</span><p>Angles i and r are measured from the normal. Relative refractive index: n₂₁ = n₂/n₁ = sin i/sin r.</p></article>
+  <article class="card full"><h3>Refraction at a flat boundary</h3><div class="diagram"><svg viewBox="0 0 700 260" role="img" aria-label="Refraction from air into glass"><path d="M25 130H675" stroke="#7d9cff" stroke-width="2"/><path d="M25 131H675V245H25Z" fill="rgba(101,229,255,.07)"/><path class="axis" d="M350 20V245"/><path class="ray" d="M180 30L350 130L450 245"/><path class="ray" d="M180 30l0 18 16-9M450 245l-17-7 14-11"/><path d="M350 130L180 130M350 130L450 130" stroke="#a7bed8" stroke-dasharray="4 5"/><text x="45" y="45">Medium 1 (lower n)</text><text x="45" y="165">Medium 2 (higher n)</text><text x="370" y="35">Normal</text><text x="190" y="115">i</text><text x="380" y="160">r</text><text x="500" y="118">Boundary</text></svg></div><p>Entering a higher-index medium, a ray bends <b>towards</b> the normal. Entering a lower-index medium, it bends <b>away</b> from the normal. At normal incidence, it changes speed but not direction.</p></article>
+  <article class="card"><h3>Optical density</h3><p>Optical density describes how strongly a medium slows light. It is not the same as mass density. The higher-index medium is optically denser relative to the other medium.</p></article>
+  <article class="card"><h3>Apparent depth</h3><p>For near-normal viewing from air into a transparent medium with a plane surface:</p><span class="formula">n ≈ real depth / apparent depth</span><p>The bottom of a pool therefore appears shallower than it really is.</p></article>
+ </div>
+</section>
+
+<section id="tir">
+ <div class="section-head"><div class="kicker">04 / Total internal reflection</div><h2>Total internal reflection (TIR)</h2><p>When light travels from a higher refractive index medium to a lower one, the refracted ray moves farther from the normal as the incidence angle increases.</p></div>
+ <div class="grid">
+  <article class="card"><h3>Two conditions</h3><ol><li>Light must travel from optically denser (higher n) to optically rarer (lower n) medium.</li><li>The angle of incidence must be greater than the critical angle.</li></ol></article>
+  <article class="card"><h3>Critical angle</h3><p>The angle of incidence in the denser medium for which the refracted ray travels along the boundary (r = 90°).</p><span class="formula">sin C = n₂/n₁  (n₁ &gt; n₂)</span><p>For a medium to air: sin C = 1/n.</p></article>
+  <article class="card full"><h3>Three cases</h3><div class="grid"><div class="card third"><b>i &lt; C</b><p>Refraction occurs; part of the light may also reflect.</p></div><div class="card third"><b>i = C</b><p>The refracted ray grazes along the interface.</p></div><div class="card third"><b>i &gt; C</b><p>Total internal reflection occurs; no propagating refracted ray enters the second medium.</p></div></div></article>
+  <article class="card full"><h3>Applications</h3><ul><li><b>Optical fibres:</b> light is guided along a core by repeated total internal reflection. Used in communications and medical endoscopes.</li><li><b>Prisms:</b> can turn light through large angles with high reflectivity.</li><li><b>Brilliance of diamonds:</b> suitable internal geometry and refractive index produce repeated internal reflections.</li><li><b>Mirage:</b> gradual refractive-index changes in air can bend rays and produce apparent displaced images; it is not simply reflection from a literal water surface.</li></ul></article>
+ </div>
+</section>
+
+<section id="mirrors">
+ <div class="section-head"><div class="kicker">05 / Spherical mirrors</div><h2>Concave and convex mirrors</h2><p>A spherical mirror is a reflecting surface that forms part of a sphere. Its principal axis passes through its pole and centre of curvature.</p></div>
+ <div class="grid">
+  <article class="card"><h3>Key terms</h3><ul><li><b>Pole (P):</b> centre of the mirror surface.</li><li><b>Centre of curvature (C):</b> centre of the parent sphere.</li><li><b>Radius (R):</b> distance PC.</li><li><b>Principal focus (F):</b> point where paraxial parallel rays converge or appear to diverge.</li><li><b>Focal length (f):</b> distance PF.</li></ul><span class="formula">f = R/2</span></article>
+  <article class="card"><h3>Mirror equation and magnification</h3><span class="formula">1/f = 1/v + 1/u</span><span class="formula">m = hᵢ/hₒ = −v/u</span><p>Use one consistent Cartesian sign convention. For the real-is-positive convention often used in school physics, signs may be written differently; never mix conventions in one calculation.</p></article>
+  <article class="card full"><h3>Principal rays for a concave mirror</h3><div class="diagram"><svg viewBox="0 0 700 235" role="img" aria-label="Concave mirror principal axis and focus"><path d="M520 25Q625 117 520 210" stroke="#8ceaff" stroke-width="5" fill="none"/><path class="axis" d="M45 118H650"/><path class="ray" d="M80 48H520L80 118M80 188L520 188L80 118" opacity=".95"/><path class="ray" d="M520 48L80 118M520 188L80 118" opacity=".55"/><path d="M80 110V126M300 110V126M410 110V126" stroke="#dceeff" stroke-width="2"/><text x="70" y="145">C</text><text x="290" y="145">F</text><text x="402" y="145">P</text><text x="550" y="20">Concave mirror</text></svg></div><p>For a concave mirror: a ray parallel to the principal axis reflects through F; a ray through F reflects parallel to the axis; a ray through C retraces its path.</p></article>
+  <article class="card full"><h3>Image formation by a concave mirror</h3><table><thead><tr><th>Object position</th><th>Image position</th><th>Nature and size</th></tr></thead><tbody><tr><td>At infinity</td><td>At F</td><td>Real, inverted, highly diminished</td></tr><tr><td>Beyond C</td><td>Between C and F</td><td>Real, inverted, diminished</td></tr><tr><td>At C</td><td>At C</td><td>Real, inverted, same size</td></tr><tr><td>Between C and F</td><td>Beyond C</td><td>Real, inverted, enlarged</td></tr><tr><td>At F</td><td>At infinity</td><td>Reflected rays parallel</td></tr><tr><td>Between F and P</td><td>Behind mirror</td><td>Virtual, erect, enlarged</td></tr></tbody></table></article>
+  <article class="card"><h3>Convex mirror</h3><p>It always forms a virtual, erect and diminished image for a real object. Its wide field of view makes it useful for vehicle rear-view and security mirrors.</p></article>
+  <article class="card"><h3>Uses of concave mirrors</h3><p>Shaving/makeup mirrors, dentist mirrors, reflecting telescopes and reflectors in lamps or searchlights. The image depends on object distance.</p></article>
+ </div>
+</section>
+
+<section id="lenses">
+ <div class="section-head"><div class="kicker">06 / Thin lenses</div><h2>Converging and diverging lenses</h2><p>A lens refracts light at two surfaces. A thin lens is one whose thickness is small compared with its radii of curvature and relevant object/image distances.</p></div>
+ <div class="grid">
+  <article class="card"><h3>Convex lens</h3><p>Usually thicker at the centre than at the edges. In air, it is converging for paraxial parallel rays and has positive focal length.</p><div class="diagram"><svg viewBox="0 0 320 150"><path class="glass" d="M150 15Q75 75 150 135Q225 75 150 15Z"/><path class="ray" d="M15 42H150L285 75M15 75H150L285 75M15 108H150L285 75"/></svg></div></article>
+  <article class="card"><h3>Concave lens</h3><p>Usually thinner at the centre than at the edges. In air, it is diverging for paraxial parallel rays and has negative focal length.</p><div class="diagram"><svg viewBox="0 0 320 150"><path class="glass" d="M150 15Q195 75 150 135Q105 75 150 15Z"/><path class="ray" d="M15 42L150 75L285 15M15 75H150L285 75M15 108L150 75L285 135"/><path stroke="#ffd58a" stroke-dasharray="4 4" fill="none" d="M150 75L30 20M150 75L30 130"/></svg></div></article>
+  <article class="card"><h3>Lens equation</h3><span class="formula">1/f = 1/v − 1/u</span><p>For the Cartesian sign convention: distances are measured from the optical centre; distances in the direction of incident light are positive and those opposite are negative.</p></article>
+  <article class="card"><h3>Magnification and power</h3><span class="formula">m = hᵢ/hₒ = v/u</span><span class="formula">P = 1/f (f in metres)</span><p>Power is measured in dioptres (D). A converging lens has positive power; a diverging lens has negative power in air.</p></article>
+  <article class="card full"><h3>Lens maker's formula</h3><span class="formula">1/f = (nₗ/nₘ − 1)(1/R₁ − 1/R₂)</span><p>For a thin lens in a surrounding medium: nₗ is the lens refractive index, nₘ the surrounding-medium index, and R₁ and R₂ are signed radii of curvature under the chosen Cartesian convention. In air, nₘ ≈ 1.</p><div class="note">The sign of each radius depends on the direction of curvature and the convention. State the convention before substituting values.</div></article>
+  <article class="card full"><h3>Image formation by a convex lens</h3><table><thead><tr><th>Object position</th><th>Image position</th><th>Nature and size</th></tr></thead><tbody><tr><td>At infinity</td><td>At F₂</td><td>Real, inverted, highly diminished</td></tr><tr><td>Beyond 2F₁</td><td>Between F₂ and 2F₂</td><td>Real, inverted, diminished</td></tr><tr><td>At 2F₁</td><td>At 2F₂</td><td>Real, inverted, same size</td></tr><tr><td>Between F₁ and 2F₁</td><td>Beyond 2F₂</td><td>Real, inverted, enlarged</td></tr><tr><td>At F₁</td><td>At infinity</td><td>Refracted rays parallel</td></tr><tr><td>Between F₁ and optical centre</td><td>Same side as object</td><td>Virtual, erect, enlarged</td></tr></tbody></table><p>A concave lens, for a real object in air, forms a virtual, erect and diminished image between the lens and its focus on the object side.</p></article>
+ </div>
+</section>
+
+<section id="prism">
+ <div class="section-head"><div class="kicker">07 / Prisms and dispersion</div><h2>Prisms, deviation and colour</h2><p>A prism is a transparent refracting medium bounded by two plane surfaces inclined at an angle called the prism angle A.</p></div>
+ <div class="grid">
+  <article class="card"><h3>Angle of deviation</h3><p>The angle between the direction of the incident ray (produced forward) and the emergent ray.</p><span class="formula">δ = i + e − A</span><p>i = angle of incidence, e = angle of emergence, A = prism angle.</p></article>
+  <article class="card"><h3>Minimum deviation</h3><p>At minimum deviation, the path is symmetric: i = e and r₁ = r₂ = A/2.</p><span class="formula">n = sin[(A + δₘ)/2] / sin(A/2)</span></article>
+  <article class="card full"><h3>Dispersion of white light</h3><p>Dispersion is the splitting of white light into its component colours because refractive index depends on wavelength. In ordinary glass, violet light generally deviates more than red light.</p><div class="diagram"><svg viewBox="0 0 700 220"><path class="glass" d="M300 35L440 110L300 185Z"/><path d="M40 110H300" stroke="#fff" stroke-width="5"/><path d="M440 110L650 30" stroke="#ff5c67" stroke-width="3"/><path d="M440 110L650 55" stroke="#ffad54" stroke-width="3"/><path d="M440 110L650 80" stroke="#ffe76b" stroke-width="3"/><path d="M440 110L650 105" stroke="#68e58c" stroke-width="3"/><path d="M440 110L650 130" stroke="#65cfff" stroke-width="3"/><path d="M440 110L650 155" stroke="#718cff" stroke-width="3"/><path d="M440 110L650 180" stroke="#bd83ff" stroke-width="3"/><text x="40" y="95">White light</text><text x="510" y="18">Red (least deviation)</text><text x="510" y="205">Violet (most deviation)</text></svg></div></article>
+  <article class="card"><h3>Scattering vs dispersion</h3><p>Dispersion separates wavelengths through wavelength-dependent refraction. Scattering redirects light through interactions with particles or fluctuations in a medium. They are related to colour effects but are different processes.</p></article>
+  <article class="card"><h3>Rainbow</h3><p>A primary rainbow forms through refraction, dispersion and one internal reflection in water droplets. Red is on the outer edge and violet on the inner edge of the primary bow.</p></article>
+ </div>
+</section>
+
+<section id="instruments">
+ <div class="section-head"><div class="kicker">08 / Optical instruments</div><h2>How lenses build useful images</h2><p>Optical instruments use mirrors and lenses to control light and improve how objects are viewed or recorded.</p></div>
+ <div class="grid">
+  <article class="card"><h3>Simple microscope / magnifying glass</h3><p>A single converging lens with the object inside its focal length produces a virtual, erect, magnified image.</p><span class="formula">M ≈ D/f  (final image at infinity)</span><span class="formula">M ≈ 1 + D/f  (near point)</span><p>D is the least distance of distinct vision, commonly taken as 25 cm for a standard eye.</p></article>
+  <article class="card"><h3>Compound microscope</h3><p>Uses an objective lens of short focal length to make a real, enlarged intermediate image, then an eyepiece to magnify it.</p><p>Approximate magnifying power for normal adjustment:</p><span class="formula">M ≈ (L/fₒ)(D/fₑ)</span><p>L is tube length; fₒ and fₑ are objective and eyepiece focal lengths.</p></article>
+  <article class="card"><h3>Astronomical telescope</h3><p>The objective forms a real, inverted image of a distant object near its focal plane. The eyepiece magnifies that image.</p><span class="formula">|M| = fₒ/fₑ</span><span class="formula">Tube length ≈ fₒ + fₑ</span><p>For normal adjustment, the final image is at infinity. The angular magnification is negative if image inversion is included in the sign.</p></article>
+  <article class="card"><h3>Camera</h3><p>A converging lens forms a real, inverted image on a sensor or film. Focusing changes lens-to-sensor geometry; aperture controls admitted light and affects depth of field.</p></article>
+  <article class="card"><h3>Human eye</h3><p>The cornea and crystalline lens focus light on the retina. The iris controls pupil size. Accommodation changes lens curvature to focus at different distances.</p></article>
+  <article class="card"><h3>Common vision corrections</h3><p><b>Myopia (short-sightedness):</b> distant images focus in front of the retina; corrected with a diverging lens.</p><p><b>Hyperopia (long-sightedness):</b> near images tend to focus behind the retina; corrected with a converging lens.</p><p><b>Presbyopia:</b> age-related reduction in accommodation; may be corrected with suitable reading, bifocal or progressive lenses.</p></article>
+ </div>
+</section>
+
+<section id="formula-sheet">
+ <div class="section-head"><div class="kicker">09 / Quick revision</div><h2>Formula sheet</h2><p>Check the stated assumptions and sign convention before using any formula.</p></div>
+ <div class="card full"><table><thead><tr><th>Topic</th><th>Formula</th><th>Meaning / condition</th></tr></thead><tbody>
+ <tr><td>Speed of light</td><td>n = c/v</td><td>Absolute refractive index</td></tr>
+ <tr><td>Snell's law</td><td>n₁ sin i = n₂ sin r</td><td>Refraction at a boundary</td></tr>
+ <tr><td>Critical angle</td><td>sin C = n₂/n₁</td><td>n₁ &gt; n₂</td></tr>
+ <tr><td>Plane mirror</td><td>v = u in magnitude; m = +1</td><td>Image distance equals object distance</td></tr>
+ <tr><td>Spherical mirror</td><td>f = R/2</td><td>Paraxial approximation</td></tr>
+ <tr><td>Mirror equation</td><td>1/f = 1/v + 1/u</td><td>Common Cartesian convention</td></tr>
+ <tr><td>Mirror magnification</td><td>m = −v/u</td><td>Same convention as above</td></tr>
+ <tr><td>Thin lens</td><td>1/f = 1/v − 1/u</td><td>Cartesian convention, incident light left to right</td></tr>
+ <tr><td>Lens magnification</td><td>m = v/u</td><td>Signed transverse magnification</td></tr>
+ <tr><td>Lens power</td><td>P = 1/f</td><td>f in metres; P in dioptres</td></tr>
+ <tr><td>Prism deviation</td><td>δ = i + e − A</td><td>Prism geometry</td></tr>
+ <tr><td>Prism index</td><td>n = sin[(A+δₘ)/2]/sin(A/2)</td><td>At minimum deviation, in air</td></tr>
+ <tr><td>Lens maker</td><td>1/f = (nₗ/nₘ−1)(1/R₁−1/R₂)</td><td>Thin lens; signed radii</td></tr>
+ </tbody></table></div>
+</section>
+
+<section id="practice">
+ <div class="section-head"><div class="kicker">10 / Worked examples</div><h2>Understand the calculations</h2></div>
+ <div class="grid">
+  <article class="card"><span class="tag">Example 1 • Refraction</span><h3>Find the refracted angle</h3><p>Light travels from air (n₁ = 1.00) into glass (n₂ = 1.50) at i = 30°.</p><span class="formula">1.00 sin 30° = 1.50 sin r</span><span class="formula">sin r = 0.5/1.5 = 0.333</span><span class="formula">r ≈ 19.5°</span><p>The ray bends towards the normal.</p></article>
+  <article class="card"><span class="tag">Example 2 • Lens power</span><h3>Find the power</h3><p>A converging lens has focal length 20 cm = 0.20 m.</p><span class="formula">P = 1/f = 1/0.20 = +5 D</span><p>The positive sign indicates a converging lens in air.</p></article>
+  <article class="card"><span class="tag">Example 3 • Critical angle</span><h3>Glass to air</h3><p>For glass with n = 1.50 into air:</p><span class="formula">sin C = 1/1.50 = 0.667</span><span class="formula">C ≈ 41.8°</span><p>Incidence above this angle produces total internal reflection.</p></article>
+  <article class="card full"><span class="tag">Try it • Interactive</span><h3>Thin lens calculator</h3><p>Use the Cartesian convention below: light travels left to right; a real object on the left has negative u. Enter focal length and object distance in centimetres.</p>
+   <div class="calc"><div><label for="focal">Focal length f (cm)</label><input id="focal" type="number" value="10" step="any"></div><div><label for="object">Object distance u (cm)</label><input id="object" type="number" value="-30" step="any"></div><div><label for="height">Object height (cm)</label><input id="height" type="number" value="2" step="any"></div></div>
+   <button class="btn primary" style="margin-top:14px" onclick="calculateLens()">Calculate image</button><div class="result" id="calcResult" aria-live="polite">Enter values and select Calculate image.</div>
+  </article>
+ </div>
+</section>
+
+<section id="aberrations">
+ <div class="section-head"><div class="kicker">11 / Image quality</div><h2>Aberrations and limitations</h2></div>
+ <div class="grid">
+  <article class="card"><h3>Spherical aberration</h3><p>Rays far from the principal axis may focus at a different point from paraxial rays. It can be reduced with suitable lens shapes, stops or combinations of elements.</p></article>
+  <article class="card"><h3>Chromatic aberration</h3><p>Different wavelengths refract by different amounts and may focus at different distances. Achromatic lens combinations reduce this effect.</p></article>
+  <article class="card"><h3>Coma, astigmatism and distortion</h3><p>Off-axis points can form comet-like images (coma), different tangential and sagittal focus positions (astigmatism), or geometrically distorted images (distortion).</p></article>
+  <article class="card"><h3>Paraxial approximation</h3><p>Many simple mirror and lens equations assume rays make small angles with the principal axis and stay close to it. Real optical systems can depart from these ideal assumptions.</p></article>
+ </div>
+</section>
+
+<section id="glossary">
+ <div class="section-head"><div class="kicker">12 / Key vocabulary</div><h2>Glossary</h2><p>Use these concise definitions when revising.</p></div>
+ <div class="grid">
+  <article class="card"><h3>Core terms</h3><p><b>Incident ray:</b> ray approaching a surface.</p><p><b>Reflected ray:</b> ray returning from a surface.</p><p><b>Refracted ray:</b> ray transmitted into another medium.</p><p><b>Normal:</b> perpendicular to a surface at the point of incidence.</p><p><b>Real image:</b> formed where rays actually meet; can be projected on a screen.</p><p><b>Virtual image:</b> formed where rays appear to come from; cannot be projected on a screen.</p></article>
+  <article class="card"><h3>Lens and mirror terms</h3><p><b>Optical centre:</b> reference point near the centre of a thin lens through which a paraxial ray passes approximately undeviated.</p><p><b>Principal axis:</b> reference line through the centres/poles of an optical system.</p><p><b>Focal plane:</b> plane through the principal focus perpendicular to the principal axis.</p><p><b>Magnification:</b> ratio of image size to object size.</p><p><b>Power:</b> reciprocal of focal length in metres.</p></article>
+ </div>
+</section>
+
+<section id="faq">
+ <div class="section-head"><div class="kicker">13 / Check your understanding</div><h2>Frequently asked questions</h2></div>
+ <details><summary>Does light slow down in glass?</summary><p>Yes. Its speed is lower in glass than in vacuum. Its frequency remains the same at a stationary boundary, while its wavelength changes.</p></details>
+ <details><summary>Can a virtual image be photographed?</summary><p>A camera lens can form a real image of the light rays arriving from the apparent source location. The virtual image itself is not a physical meeting of rays, but optical systems can record the corresponding light field.</p></details>
+ <details><summary>Why do convex mirrors give a wide field of view?</summary><p>They diverge reflected rays, allowing a larger region of the surroundings to be seen in a smaller mirror. The trade-off is a diminished image.</p></details>
+ <details><summary>Are all convex lenses converging?</summary><p>Not in every surrounding medium. A lens's behaviour depends on its refractive index relative to the surrounding medium. The usual school-level statement assumes the lens is in air.</p></details>
+ <details><summary>What is the difference between ray optics and wave optics?</summary><p>Ray optics tracks paths and image formation. Wave optics accounts for effects such as interference, diffraction and polarization that require wave properties.</p></details>
+</section>
+</main>
+<footer><b>GEOMETRICAL OPTICS</b><p>Learn the ray model. Draw the diagram. Choose a sign convention. Then apply the formula.</p><a href="#top">Back to top ↑</a><p class="muted">Educational guide • Idealized diagrams • Check your class syllabus for the exact convention used.</p></footer>
+<script>
+const orb=document.getElementById('orbital'), progress=document.getElementById('progress');
+let ticking=false;
+function updateScene(){
+ const max=document.documentElement.scrollHeight-innerHeight;
+ const p=max>0?scrollY/max:0;
+ progress.style.width=(p*100)+'%';
+ // Scrolling down zooms in and rotates; scrolling up reverses both.
+ const scale=0.72+p*0.78;
+ const rotate=p*230-35;
+ const tilt=58+Math.sin(p*Math.PI*2)*5;
+ orb.style.transform=`translate(-50%,-50%) scale(${scale}) rotateX(${tilt}deg) rotateZ(${rotate}deg)`;
+ ticking=false;
+}
+window.addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(updateScene);ticking=true;}},{passive:true});
+window.addEventListener('resize',updateScene);updateScene();
+function calculateLens(){
+ const f=Number(document.getElementById('focal').value);
+ const u=Number(document.getElementById('object').value);
+ const h=Number(document.getElementById('height').value);
+ const out=document.getElementById('calcResult');
+ if(!Number.isFinite(f)||!Number.isFinite(u)||!Number.isFinite(h)||f===0||u===0){out.textContent='Please enter valid non-zero focal length and object distance.';return;}
+ const denom=(1/f)-(1/u);
+ if(Math.abs(denom)<1e-10){out.textContent='Image is at infinity (emergent rays are parallel).';return;}
+ const v=1/denom, m=v/u, hi=m*h;
+ const nature=v>0?'real':'virtual', orientation=m<0?'inverted':'erect';
+ out.innerHTML=`<b>Image distance:</b> v = ${v.toFixed(3)} cm<br><b>Magnification:</b> m = ${m.toFixed(3)}<br><b>Image height:</b> hᵢ = ${hi.toFixed(3)} cm<br><b>Image:</b> ${nature}, ${orientation}, ${Math.abs(m)>1?'enlarged':Math.abs(m)<1?'diminished':'same size'}.`;
+}
+</script>
+</body>
+</html>
